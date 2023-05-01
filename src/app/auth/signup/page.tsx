@@ -1,5 +1,5 @@
 "use client";
-import { logIn, signUp } from "@/api";
+import { logIn, signUp } from "../../../../api";
 import Button from "@/components/button";
 import Input from "@/components/input";
 import Link from "next/link";

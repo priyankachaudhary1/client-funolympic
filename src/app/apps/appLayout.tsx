@@ -1,11 +1,13 @@
 "use client";
 import { Dialog, Menu, Transition } from "@headlessui/react";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  BookOpenIcon,
+  VideoCameraIcon,
   ChartBarIcon,
   UserGroupIcon,
   XMarkIcon,
@@ -17,28 +19,23 @@ import Link from "next/link";
 const AdminMenu = [
   {
     name: "Dashboard",
-    href: "/app/dashboard",
+    href: "/apps/dashboard",
     icon: ChartBarIcon,
   },
   {
-    name: "Coordinators",
-    href: "/app/coordinators",
+    name: "Users",
+    href: "/apps/users",
     icon: UserGroupIcon,
   },
   {
-    name: "Supervisors",
-    href: "/app/supervisors",
+    name: "Category",
+    href: "/apps/category",
     icon: UserGroupIcon,
   },
   {
-    name: "Courses",
-    href: "/app/courses",
-    icon: BookOpenIcon,
-  },
-  {
-    name: "Settings",
-    href: "/app/settings",
-    icon: AdjustmentsHorizontalIcon,
+    name: "Vedios",
+    href: "/apps/vedios",
+    icon: VideoCameraIcon,
   },
 ];
 
@@ -313,7 +310,7 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
           </main>
         </div>
       </div>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </>
   );
 };
