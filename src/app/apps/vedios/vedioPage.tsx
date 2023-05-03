@@ -1,6 +1,7 @@
 "use client";
 import {
   addVideo,
+  deleteVideo,
   editVideo,
   getAllVideo,
   getfilterVideo,
@@ -13,7 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import ReactPlayer from "react-player";
 import Select from "@/components/select";
-import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 const VedioPage = () => {
   const [role, setRole] = useState<any>("");
@@ -51,6 +52,15 @@ const VedioPage = () => {
       refetch();
     },
   });
+  const { mutate: mutateDelete } = useMutation(
+    (id: string) => deleteVideo(id),
+    {
+      onSuccess: () => {
+        refetch();
+        refetchFilter();
+      },
+    }
+  );
 
   const { mutate: mutateEdit, isLoading: editLoading } = useMutation(
     () => editVideo(state),
@@ -124,7 +134,7 @@ const VedioPage = () => {
                   height='80%'
                   width='100%'
                 />
-                <div className='grid grid-cols-7 cursor-default'>
+                <div className='grid grid-cols-8 cursor-default'>
                   <div className='flex flex-col col-span-6'>
                     <div className='text-sm font-semibold px-1 pt-1 overflow-hidden'>
                       {el.title}
@@ -144,6 +154,16 @@ const VedioPage = () => {
                       }}
                     >
                       <PencilSquareIcon className='w-5 h-5 group-hover:text-green-500 mt-1 hidden group-hover:block' />
+                    </div>
+                  )}
+                  {role === "admin" && (
+                    <div
+                      className='flex col-span-1 justify-center items-center cursor-pointer group'
+                      onClick={() => {
+                        mutateDelete(el.id);
+                      }}
+                    >
+                      <TrashIcon className='w-5 h-5 group-hover:text-red-500 mt-1 hidden group-hover:block' />
                     </div>
                   )}
                 </div>

@@ -213,6 +213,37 @@ export const editVideo = async (data: any) => {
   }
 };
 
+export const deleteVideo = async (id: string) => {
+  try {
+    const response: any = await apiClient.delete(baseUrl + "/video/" + id);
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const userProfile = async (data: any) => {
+  try {
+    const response: any = await apiClient.patch(
+      baseUrl + "/user/profile",
+      data
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
 apiClient.interceptors.response.use(
   function (response) {
     const { status, data } = response;

@@ -10,6 +10,7 @@ import {
   VideoCameraIcon,
   ChartBarIcon,
   UserGroupIcon,
+  UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { usePathname, useRouter } from "next/navigation";
@@ -45,11 +46,15 @@ const UserMenu = [
     href: "/apps/dashboard",
     icon: ChartBarIcon,
   },
-
   {
     name: "Vedios",
     href: "/apps/vedios",
     icon: VideoCameraIcon,
+  },
+  {
+    name: "Profile",
+    href: "/apps/profile",
+    icon: UserIcon,
   },
 ];
 
