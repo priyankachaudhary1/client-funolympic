@@ -17,7 +17,7 @@ export default function Login() {
   } = useMutation(async () => await logIn(state.email, state.password));
   console.log(data, "data");
   if (data?.accessToken) {
-    redirect("/apps");
+    redirect("/apps/dashboard");
   }
   return (
     <div className='w-full h-screen flex justify-center items-center md:p-0 px-8'>

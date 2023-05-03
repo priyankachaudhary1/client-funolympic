@@ -146,6 +146,73 @@ export const deleteVideoCategory = async (id: string) => {
   }
 };
 
+export const getAllVideo = async () => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/video");
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getfilterVideo = async (id: string) => {
+  try {
+    const response: any = await apiClient.get(
+      baseUrl + "/video/category/" + id
+    );
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const addVideo = async (data: any) => {
+  try {
+    const formData: any = new FormData();
+    Object.entries(data)?.forEach((el: any) => {
+      formData.append(`${el[0]}`, el[1]);
+    });
+    const response: any = await apiClient.post(baseUrl + "/video", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const editVideo = async (data: any) => {
+  try {
+    const response: any = await apiClient.patch(
+      baseUrl + "/video/" + data?.id,
+      data
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
 apiClient.interceptors.response.use(
   function (response) {
     const { status, data } = response;

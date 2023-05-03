@@ -39,16 +39,41 @@ const AdminMenu = [
   },
 ];
 
+const UserMenu = [
+  {
+    name: "Dashboard",
+    href: "/apps/dashboard",
+    icon: ChartBarIcon,
+  },
+
+  {
+    name: "Vedios",
+    href: "/apps/vedios",
+    icon: VideoCameraIcon,
+  },
+];
+
 const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
   const router = useRouter();
-  let role;
+
+  const [userRole, setUserRole] = useState<string>("");
+  let role: any;
   useEffect(() => {
     role = localStorage.getItem("role");
   }, []);
 
+  useEffect(() => {
+    role && setUserRole(role);
+  }, [role]);
+
+  useEffect(() => {
+    userRole === "admin" && setMenus(AdminMenu);
+    userRole === "user" && setMenus(UserMenu);
+  }, [userRole]);
+
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [menus, setMenus] = React.useState<any[]>(AdminMenu);
+  const [menus, setMenus] = React.useState<any[]>([]);
 
   const activeRoute = React.useCallback(
     (href: string) => {
@@ -230,7 +255,9 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
               <div className='flex items-center'>
                 <div></div>
                 <div className='ml-3 w-full'>
-                  <p className='text-base font-medium text-gray-900'>{role}</p>
+                  <p className='text-base font-medium text-gray-900'>
+                    {userRole}
+                  </p>
                   <div className=' '>
                     <button
                       className=' my-2 flex items-center text-gray-900'

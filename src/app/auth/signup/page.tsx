@@ -5,12 +5,20 @@ import Input from "@/components/input";
 import Link from "next/link";
 import { useState } from "react";
 import { useMutation } from "react-query";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
+  const router = useRouter();
   const [state, setState] = useState<any>({});
 
   const { mutate, error: formError } = useMutation(
-    async () => await signUp(state)
+    async () => await signUp(state),
+    {
+      onSuccess: () => {
+        setState({});
+        router.push("/auth/login");
+      },
+    }
   );
   return (
     <div className='w-full h-screen flex justify-center items-center md:p-0 px-8'>
@@ -44,13 +52,7 @@ export default function SignUp() {
               setState((prev: any) => ({ ...prev, password: e.target.value }))
             }
           />
-          <Input
-            name='role'
-            label='Role'
-            onChange={(e: any) =>
-              setState((prev: any) => ({ ...prev, role: e.target.value }))
-            }
-          />
+
           <>
             {formError && (
               <div className='text-red-500 text-xs  py-2 bg-red-200  rounded-md pl-2 mb-1'>
