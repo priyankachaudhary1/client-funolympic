@@ -15,7 +15,6 @@ export default function Login() {
     error: formError,
     data,
   } = useMutation(async () => await logIn(state.email, state.password));
-  console.log(data, "data");
   if (data?.accessToken) {
     redirect("/apps/dashboard");
   }

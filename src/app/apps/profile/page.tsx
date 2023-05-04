@@ -7,13 +7,18 @@ import { userProfile } from "../../../../api";
 
 const Page = () => {
   const [state, setState] = useState<any>({});
-  const { mutate, error: formError } = useMutation(() => userProfile(state));
+  const { mutate, error: formError } = useMutation(() => userProfile(state), {
+    onSuccess: () => {
+      setState({});
+    },
+  });
   return (
     <div className='md:w-1/2 w-full '>
       <div className='flex flex-col  pt-4 h-full'>
         <Input
           name='address'
           label='Address'
+          value={state?.address ?? ""}
           onChange={(e: any) =>
             setState((prev: any) => ({ ...prev, address: e.target.value }))
           }
@@ -21,6 +26,7 @@ const Page = () => {
         <Input
           name='phoneNumber'
           label='Phone '
+          value={state?.phoneNumber ?? ""}
           onChange={(e: any) =>
             setState((prev: any) => ({ ...prev, phoneNumber: e.target.value }))
           }

@@ -1,25 +1,21 @@
+"use client";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-let authToken: any;
-
-if (typeof window !== "undefined") {
-  authToken = localStorage.getItem("token");
-}
-
-let headers: any = { "Context-Type": "application/json" };
-
-if (authToken) {
-  headers["Authorization"] = `Bearer ${authToken}`;
+function token() {
+  const token = localStorage.getItem("token");
+  return token;
 }
 
 const apiClient = axios.create({
   baseURL: baseUrl,
-  headers: {
-    ...headers,
-  },
+});
+
+apiClient.interceptors.request.use(function (request) {
+  request.headers["Authorization"] = `Bearer ${token()}`;
+  return request;
 });
 
 export const logIn = async (email: string, password: string) => {
