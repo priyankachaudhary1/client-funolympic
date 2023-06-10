@@ -19,6 +19,7 @@ export default function Select({
   placeholder?: string;
   [key: string]: any;
 }) {
+  console.log(selected, "selected");
   return (
     <div className='w-full  '>
       <Listbox value={selected} onChange={setSelected}>

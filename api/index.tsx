@@ -27,6 +27,7 @@ export const logIn = async (email: string, password: string) => {
     if (response?.data?.accessToken) {
       localStorage.setItem("token", response?.data?.accessToken);
       localStorage.setItem("role", response?.data?.role);
+      localStorage.setItem("id", response?.data?.id);
     }
 
     return response.data;
@@ -83,7 +84,6 @@ export const changeUserStatus = async (id: string) => {
 export const getVideoCategory = async () => {
   try {
     const response: any = await apiClient.get(baseUrl + "/video-category");
-    console.log(response);
     return response.data;
   } catch (error: any) {
     if (error?.response?.data) {
@@ -224,10 +224,15 @@ export const deleteVideo = async (id: string) => {
 };
 
 export const userProfile = async (data: any) => {
+  const formData = new FormData();
+  Object.entries(data).forEach(([key, value]: any) => {
+    formData.append(`${key}`, value);
+  });
   try {
     const response: any = await apiClient.patch(
       baseUrl + "/user/profile",
-      data
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
 
     return response.data;
@@ -262,3 +267,216 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const getVideo = async (id: string) => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/video/" + id);
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const addFeedback = async (data: any) => {
+  try {
+    const response: any = await apiClient.post(baseUrl + "/feedback", data);
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getAllFeedback = async (id: string) => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/feedback/" + id);
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getAllComplains = async (id: string) => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/complaints/" + id);
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const editFeedback = async (data: any) => {
+  try {
+    const formData: any = new FormData();
+
+    const response: any = await apiClient.patch(
+      baseUrl + "/feedback/" + data.id,
+      data
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const deleteFeedback = async (id: string, role: string) => {
+  const url = role === "admin" ? "/feedback/admin/" : "/feedback/user/";
+
+  try {
+    const response: any = await apiClient.delete(baseUrl + url + id);
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const deleteComplains = async (id: string) => {
+  try {
+    const response: any = await apiClient.delete(baseUrl + "/complaints/" + id);
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const addComplains = async (data: any) => {
+  try {
+    const response: any = await apiClient.post(baseUrl + "/complaints", data);
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const chagePassword = async (data: any) => {
+  try {
+    const response: any = await apiClient.patch(
+      baseUrl + "/user/password/",
+      data
+    );
+
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getVideoCount = async () => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/video/total-videos");
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getUserCount = async () => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/user/total-users");
+    console.log(response);
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const verifyOtp = async (data: any) => {
+  try {
+    const response: any = await apiClient.patch(baseUrl + "/user/verify-otp", {
+      ...data,
+    });
+    if (response?.data?.accessToken) {
+      localStorage.setItem("token", response?.data?.accessToken);
+      localStorage.setItem("role", response?.data?.role);
+      localStorage.setItem("id", response?.data?.id);
+    }
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getUseMe = async () => {
+  try {
+    const response: any = await apiClient.get(baseUrl + "/user/me");
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const resendOtp = async (data: any) => {
+  try {
+    const response: any = await apiClient.patch(
+      baseUrl + "/user/resendOtp",
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error?.response?.data) {
+      return Promise.reject(error.response.data);
+    } else {
+      return Promise.reject(error);
+    }
+  }
+};

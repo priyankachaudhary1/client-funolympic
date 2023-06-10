@@ -1,7 +1,6 @@
 "use client";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import React, { Fragment, useEffect, useState } from "react";
 import {
   AdjustmentsHorizontalIcon,
@@ -16,6 +15,9 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import { useQuery } from "react-query";
+import { getUseMe } from "../../../api";
 
 const AdminMenu = [
   {
@@ -61,6 +63,8 @@ const UserMenu = [
 const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
   const pathName = usePathname();
   const router = useRouter();
+
+  const { data } = useQuery(["useMe"], getUseMe);
 
   const [userRole, setUserRole] = useState<string>("");
   let role: any;
@@ -150,11 +154,11 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
                   </div>
                 </Transition.Child>
                 <div className='flex-shrink-0 flex items-center px-4 '>
-                  <img
+                  {/* <img
                     className='h-8 w-auto'
                     src='https://freesvg.org/img/student_hat_1.png'
                     alt='Consultancy'
-                  />
+                  /> */}
                   <p className='font-extrabold text-primaryDark px-3 text-xl'>
                     Vedio Stream
                   </p>
@@ -220,13 +224,13 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className='flex flex-col flex-grow pt-5 bg-primary overflow-y-auto'>
             <div className='flex items-center flex-shrink-0 px-4'>
-              <img
+              {/* <img
                 className='h-8 w-auto'
                 src='https://freesvg.org/img/student_hat_1.png'
                 alt='Consultancy'
-              />
+              /> */}
               <p className='font-extrabold text-primaryDark px-3 text-xl'>
-                Vedio Stream
+                Video Stream
               </p>
             </div>
             <div className='mt-5 flex-1 flex flex-col'>
@@ -325,7 +329,7 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
                       <span className='sr-only'>Open user menu</span>
                       <img
                         className='h-8 w-8 rounded-full'
-                        src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+                        src={data?.profile}
                         alt=''
                       />
                     </Menu.Button>
@@ -336,7 +340,7 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <main>
-            <div className='py-5 h-screen bg-gray-50 '>
+            <div className='py-5 min-h-[90vh]  bg-gray-50 '>
               <div className='max-w-full px-4 sm:px-6 md:px-8'>{children}</div>
             </div>
           </main>

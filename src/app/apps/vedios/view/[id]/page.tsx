@@ -1,8 +1,7 @@
 import React from "react";
-import Login from "./loginpage";
-
+import PlayVedio from "./playVedio";
 const Page = () => {
-  return <Login />;
+  return <PlayVedio />;
 };
 
 export default Page;

@@ -15,20 +15,24 @@ import { useMutation, useQuery } from "react-query";
 import ReactPlayer from "react-player";
 import Select from "@/components/select";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
+import clsx from "clsx";
+import { useRouter } from "next/navigation";
 
 const VedioPage = () => {
+  const router = useRouter();
   const [role, setRole] = useState<any>("");
   const [modal, setModal] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [state, setState] = useState<any>({});
   const [selectedCategory, setSelectedCategory] = useState<any>({});
-  const [filter, setFilter] = useState<any>({});
   const [videoList, setVideoList] = useState<any>([]);
 
   const [playVedio, setPlayVedio] = useState<boolean>(false);
   const [vedioId, setVedioId] = useState<string>("");
 
   const { data } = useQuery(["videoCategoryList"], getVideoCategory);
+  const [filter, setFilter] = useState<any>("all");
   const { data: allVedios, refetch } = useQuery(["videoList"], getAllVideo, {
     onSuccess: (data) => {
       setVideoList(data);
@@ -36,7 +40,7 @@ const VedioPage = () => {
   });
   const { refetch: refetchFilter } = useQuery(
     ["videoList"],
-    () => getfilterVideo(filter.id),
+    () => getfilterVideo(filter),
     {
       onSuccess: (data) => {
         setVideoList(data);
@@ -75,7 +79,9 @@ const VedioPage = () => {
   );
 
   useEffect(() => {
-    setSelectedCategory(state?.videoCategory);
+    if (edit) {
+      setSelectedCategory(state?.categoryId);
+    }
   }, [edit]);
 
   useEffect(() => {
@@ -86,9 +92,7 @@ const VedioPage = () => {
     setState((prev: any) => ({ ...prev, categoryId: selectedCategory?.id }));
   }, [selectedCategory]);
 
-  useEffect(() => {
-    refetchFilter();
-  }, [filter]);
+  console.log(state, "ststs");
   return (
     <div>
       <div className='flex justify-between'>
@@ -103,77 +107,88 @@ const VedioPage = () => {
           )}
         </div>
       </div>
-      <div className='w-full md:w-1/3 pb-8'>
-        <Select
-          label=''
-          selected={filter}
-          setSelected={(val: any) => {
-            setFilter(val);
-          }}
-          data={data}
-        />
-      </div>
-      <div className='grid lg:grid-cols-4 grid-cols-2 gap-x-10 z-10'>
-        {videoList?.length ? (
-          <>
-            {videoList.map((el: any) => (
-              <div
-                className='bg-gray-50 group w-full flex flex-col pb-3 rounded-xl overflow-hidden shadow-xl hover:-translate-y-2 hover:scale-105 ease-in-out duration-300	 hover:shadow-2xl delay-100  cursor-pointer '
-                onMouseEnter={() => {
-                  setPlayVedio(true);
-                  setVedioId(el.id);
-                }}
-                onMouseLeave={() => {
-                  setPlayVedio(false);
-                }}
-              >
-                <ReactPlayer
-                  url={el.videoUrl}
-                  playing={vedioId === el.id && playVedio}
-                  controls={true}
-                  height='80%'
-                  width='100%'
-                />
-                <div className='grid grid-cols-8 cursor-default'>
-                  <div className='flex flex-col col-span-6'>
-                    <div className='text-sm font-semibold px-1 pt-1 overflow-hidden'>
-                      {el.title}
-                    </div>
-                    <div className='text-xs text-gray-500 px-1 pb-1 overflow-hidden'>
-                      {el.description}
-                    </div>
-                  </div>
-                  {role === "admin" && (
-                    <div
-                      className='flex col-span-1 justify-center items-center cursor-pointer group'
-                      onClick={() => {
-                        setEdit(true);
-                        setState(
-                          videoList?.filter((item: any) => item.id === el.id)[0]
-                        );
-                      }}
-                    >
-                      <PencilSquareIcon className='w-5 h-5 group-hover:text-green-500 mt-1 hidden group-hover:block' />
-                    </div>
+      <div className='flex flex-col gap-y-9 py-5'>
+        {allVedios?.map((el: any) => (
+          <div key={el.id}>
+            <div className='w-full flex  mt-3 mb-8 border-b border-gray-200 bg-gray-100 py-3 rounded-sm'>
+              <div>
+                <span
+                  className={clsx(
+                    "text-sm border border-gray-200 p-[6px] px-3 cursor-pointer rounded-full ml-1",
+                    "bg-primary-300 hover:bg-primary-500 text-white font-semibold"
                   )}
-                  {role === "admin" && (
-                    <div
-                      className='flex col-span-1 justify-center items-center cursor-pointer group'
-                      onClick={() => {
-                        mutateDelete(el.id);
-                      }}
-                    >
-                      <TrashIcon className='w-5 h-5 group-hover:text-red-500 mt-1 hidden group-hover:block' />
-                    </div>
-                  )}
-                </div>
+                >
+                  {el.category}
+                </span>
               </div>
-            ))}
-          </>
-        ) : (
-          <h2 className='font-semibold py-7 text-gray-500'>No data found...</h2>
-        )}
+            </div>
+            <div className='grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-y-4 md:gap-x-10 z-10'>
+              {el.videos.map((val: any) => (
+                <div
+                  className='bg-gray-50 group w-full flex flex-col pb-3 rounded-xl overflow-hidden shadow-xl hover:-translate-y-2 hover:scale-105 ease-in-out duration-300	 hover:shadow-2xl delay-100  cursor-pointer '
+                  onMouseEnter={() => {
+                    setPlayVedio(true);
+                    setVedioId(val.id);
+                  }}
+                  onMouseLeave={() => {
+                    setPlayVedio(false);
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.replace(`apps/vedios/view/${val.id}`);
+                  }}
+                >
+                  <ReactPlayer
+                    url={val.videoUrl}
+                    playing={vedioId === val.id && playVedio}
+                    controls={true}
+                    height='80%'
+                    width='100%'
+                  />
+                  <div className='grid grid-cols-8 cursor-default'>
+                    <div className='flex flex-col col-span-6'>
+                      <div className='text-sm font-semibold px-1 pt-1 overflow-hidden'>
+                        {val.title}
+                      </div>
+                      <div className='text-xs text-gray-500 px-1 pb-1 overflow-hidden'>
+                        {val.description}
+                      </div>
+                    </div>
+                    {role === "admin" && (
+                      <div
+                        className='flex col-span-1 justify-center items-center cursor-pointer group'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setState({
+                            title: val.title,
+                            description: val.description,
+                            categoryId: val.categoryId,
+                            id: val.id,
+                          });
+                          setEdit(true);
+                        }}
+                      >
+                        <PencilSquareIcon className='w-5 h-5 group-hover:text-green-500 mt-1 hidden group-hover:block' />
+                      </div>
+                    )}
+                    {role === "admin" && (
+                      <div
+                        className='flex col-span-1 justify-center items-center cursor-pointer group'
+                        onClick={() => {
+                          mutateDelete(el.id);
+                        }}
+                      >
+                        <TrashIcon className='w-5 h-5 group-hover:text-red-500 mt-1 hidden group-hover:block' />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
+
       <SidePanel
         isVisible={modal}
         title='Add New video'
