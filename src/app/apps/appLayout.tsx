@@ -346,7 +346,6 @@ const AppLayoutClient = ({ children }: { children: React.ReactNode }) => {
           </main>
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 };
